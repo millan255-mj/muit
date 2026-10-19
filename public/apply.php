@@ -1,4 +1,5 @@
 <?php require __DIR__.'/../inc/bootstrap.php';
+$fn=trim($_POST['first_name']??'');$mn=trim($_POST['middle_name']??'');$sn=trim($_POST['surname']??'');$_POST['full_name']=($fn!==''&&$sn!=='')?preg_replace('/\s+/',' ',"$fn $mn $sn"):'';
 if($_SERVER['REQUEST_METHOD']=='POST'){$f=['full_name','course_id','dob','gender','address','phone','email'];$ok=true;foreach($f as $k)if(trim($_POST[$k]??'')==='')$ok=false;
 $c=up('cert');$ph=up('photo');$sl=up('slip');
 if(!$ok||!filter_var($_POST['email'],FILTER_VALIDATE_EMAIL))flash('Please complete every field with a valid email.');
@@ -7,7 +8,9 @@ else{q('INSERT INTO applications(full_name,course_id,dob,gender,address,phone,em
 flash('Application submitted. Your reference number is <b>#'.db()->lastInsertId().'</b>. Keep it and use it with your email on the <a href=/status.php>status page</a>.');go('/status.php');}}
 head('Student registration application');?>
 <form method=post enctype=multipart/form-data class="card form">
-<label>Full legal name<input name=full_name required></label>
+<label>First name<input name=first_name required></label>
+<label>Middle name<input name=middle_name></label>
+<label>Surname<input name=surname required></label>
 <label>Course / programme<select name=course_id required><?=opts('SELECT id,name FROM courses ORDER BY name')?></select></label>
 <label>Date of birth (DD/MM/YYYY)<input type=date name=dob required></label>
 <label>Gender<select name=gender><option>Male</option><option>Female</option><option>Other</option></select></label>
